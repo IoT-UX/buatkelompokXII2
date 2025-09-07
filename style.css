@@ -1,6 +1,5 @@
-/* style.css - Versi Pro Final */
+/* style.css - Versi Sempurna dengan Warna & Pointer */
 
-/* Import Font & Variabel Tema */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 :root {
@@ -14,32 +13,33 @@
     --border-radius-card: 16px;
     --border-radius-pill: 50px;
     --main-font: 'Poppins', sans-serif;
+
+    /* Palet warna gelap untuk segmen roda dan judul kelompok */
+    --color-palette-1: #34495E; /* Dark Blue Gray */
+    --color-palette-2: #2C3E50; /* Deeper Blue Gray */
+    --color-palette-3: #16A085; /* Dark Teal */
+    --color-palette-4: #27AE60; /* Darker Green */
+    --color-palette-5: #2ECC71; /* Medium Green */
+    --color-palette-6: #8E44AD; /* Dark Purple */
+    --color-palette-7: #9B59B6; /* Medium Purple */
+    --color-palette-8: #3498DB; /* Medium Blue */
+    --color-palette-9: #2980B9; /* Darker Blue */
+    --color-palette-10: #E67E22; /* Dark Orange */
+    --color-palette-11: #D35400; /* Deep Orange */
+    --color-palette-12: #C0392B; /* Dark Red */
+    --color-palette-13: #E74C3C; /* Medium Red */
+    --color-palette-14: #F1C40F; /* Dark Yellow */
+    --color-palette-15: #F39C12; /* Golden Yellow */
 }
 
-/* =============================== */
-/* ANIMASI                         */
-/* =============================== */
+/* ANIMASI */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUpSlight { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes cardReveal { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes aurora { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes typing { from { width: 0; } to { width: 100%; } }
 
-@keyframes fadeInUpSlight {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes cardReveal {
-    from { opacity: 0; transform: translateY(20px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes aurora {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* =============================== */
-/* GAYA GLOBAL & LATAR             */
-/* =============================== */
-
+/* GAYA GLOBAL & LATAR */
 body {
     font-family: var(--main-font);
     background-color: var(--background-dark);
@@ -56,185 +56,218 @@ body {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
 }
-
 body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0;
+    content: ''; position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
     background: linear-gradient(125deg, #1db954, #121212, #3a0ca3, #121212);
     background-size: 300% 300%;
-    filter: blur(100px);
-    opacity: 0.2;
-    z-index: -1;
-    animation: aurora 25s ease infinite;
+    filter: blur(100px); opacity: 0.2;
+    z-index: -1; animation: aurora 25s ease infinite;
 }
 
-/* =============================== */
-/* CONTAINER & FORM                */
-/* =============================== */
-
+/* STRUKTUR TAMPILAN (VIEW) */
+.view {
+    display: none; width: 100%; position: absolute;
+    opacity: 0; transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transform: scale(0.98); pointer-events: none;
+}
+.view.active {
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: center; position: relative;
+    opacity: 1; transform: scale(1); pointer-events: auto;
+}
 .container {
     background: rgba(30, 30, 30, 0.7);
     backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    padding: 40px;
-    border-radius: var(--border-radius-card);
-    width: 100%;
-    max-width: 600px;
-    border: 1px solid var(--border-color);
+    padding: 40px; border-radius: var(--border-radius-card);
+    width: 100%; max-width: 600px; border: 1px solid var(--border-color);
     animation: fadeInUpSlight 1s ease-out;
-    margin-bottom: 40px;
 }
 
+/* TAMPILAN SETUP */
 h1 { text-align: center; color: var(--text-primary); margin-top: 0; margin-bottom: 10px; font-weight: 700; }
 p { text-align: center; color: var(--text-secondary); margin-top: 0; margin-bottom: 30px; }
 label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-secondary); }
+.input-section { margin-bottom: 25px; }
 
-/* =============================== */
-/* KONTROL ANGKA KUSTOM            */
-/* =============================== */
-
+.mode-selector {
+    display: flex; gap: 10px; background-color: #333;
+    padding: 5px; border-radius: var(--border-radius-pill);
+}
+.mode-btn {
+    flex-grow: 1; padding: 10px 20px; border: none;
+    border-radius: var(--border-radius-pill); background-color: transparent;
+    color: var(--text-secondary); font-weight: 600;
+    cursor: pointer; transition: all 0.3s ease;
+}
+.mode-btn.active {
+    background-color: var(--spotify-green); color: #000;
+    box-shadow: 0 5px 15px rgba(29, 185, 84, 0.2);
+}
 .number-input-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 25px;
+    display: flex; justify-content: center;
+    align-items: center; gap: 20px;
 }
 .number-control-btn {
-    width: 44px;
-    height: 44px;
-    background-color: #333;
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-    border-radius: 50%;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 44px; height: 44px; background-color: #333;
+    border: 1px solid var(--border-color); color: var(--text-primary);
+    border-radius: 50%; font-size: 24px; font-weight: bold; cursor: pointer;
+    transition: all 0.2s ease; display: flex;
+    justify-content: center; align-items: center;
 }
-.number-control-btn:hover {
-    background-color: #444;
-    border-color: var(--spotify-green);
-}
-.number-control-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
+.number-control-btn:hover { background-color: #444; border-color: var(--spotify-green); }
+.number-control-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 .number-display {
-    font-size: 36px;
-    font-weight: 700;
-    color: var(--text-primary);
-    min-width: 60px;
-    text-align: center;
+    font-size: 36px; font-weight: 700;
+    color: var(--text-primary); min-width: 60px; text-align: center;
 }
-
-/* =============================== */
-/* TOMBOL UTAMA & HASIL            */
-/* =============================== */
-
 button#generate-btn {
     width: 100%; padding: 15px; background: var(--spotify-green); color: #000;
     border: none; border-radius: var(--border-radius-pill); font-size: 16px;
     font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-    cursor: pointer; transition: all 0.2s ease-out; position: relative;
-    overflow: hidden;
+    cursor: pointer; transition: all 0.2s ease-out;
 }
 button#generate-btn:hover {
-    background-color: var(--spotify-green-hover);
-    transform: scale(1.05);
+    background-color: var(--spotify-green-hover); transform: scale(1.05);
     box-shadow: 0 10px 20px rgba(29, 185, 84, 0.25);
 }
-button#generate-btn:active {
-    transform: scale(0.95);
-    box-shadow: 0 5px 10px rgba(29, 185, 84, 0.2);
+button#generate-btn:active { transform: scale(0.95); box-shadow: 0 5px 10px rgba(29, 185, 84, 0.2); }
+
+/* TAMPILAN SPIN */
+#spin-view { padding: 20px; gap: 20px; }
+.spin-layout {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    align-items: flex-start; gap: 30px;
+    width: 100%; max-width: 1200px;
+}
+.wheel-wrapper {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 20px;
+}
+.wheel-container {
+    position: relative; width: 450px; height: 450px;
+    display: flex; justify-content: center; align-items: center;
+}
+.wheel-pointer {
+    position: absolute; top: 0; left: 50%; /* Posisi di atas tengah */
+    transform: translateX(-50%); /* Geser ke kiri 50% lebar sendiri */
+    width: 0; height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 30px solid var(--spotify-green); /* Gunakan border-top untuk menunjuk ke bawah */
+    z-index: 10;
+    filter: drop-shadow(0 4px 5px rgba(0,0,0,0.5));
+    transition: transform 0.5s cubic-bezier(0.1, 1.5, 0.5, 1);
+}
+.wheel-container.spinning .wheel-pointer {
+    transform: translateX(-50%) translateY(5px) scale(1.1); /* Sedikit bergerak saat berputar */
 }
 
+#wheel-canvas {
+    transition: transform 0.5s ease;
+}
+
+#spin-btn {
+    padding: 15px 50px; background: var(--spotify-green); color: #000;
+    border: none; border-radius: var(--border-radius-pill); font-size: 20px;
+    font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s ease-out;
+}
+#spin-btn:hover {
+    background-color: var(--spotify-green-hover); transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(29, 185, 84, 0.25);
+}
+#spin-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: scale(1); }
+.spin-status {
+    color: var(--text-secondary); font-size: 1.1em;
+    min-height: 24px; text-align: center;
+    overflow: hidden; white-space: nowrap;
+}
+.spin-status.typing {
+    border-right: .15em solid var(--spotify-green);
+    animation: typing 2s steps(30, end) forwards, fadeIn 0.5s;
+}
+.spin-results-wrapper {
+    flex-grow: 1; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px; width: 100%; max-width: 700px;
+}
+.spin-results-wrapper .kelompok-card ul { min-height: 100px; }
+.spin-results-wrapper .kelompok-card li { animation: fadeInUpSlight 0.5s ease-out forwards; opacity: 0; }
+.kelompok-card.highlight {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--spotify-green-hover);
+    border-color: var(--spotify-green);
+    transition: all 0.3s ease-out;
+}
+
+/* TAMPILAN HASIL */
 #hasil-kelompok {
-    margin-top: 30px;
-    display: grid;
+    margin-top: 30px; display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
 }
-
 .kelompok-card {
     background: rgba(40, 40, 40, 0.7);
     backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-card);
-    padding: 20px;
-    opacity: 0;
-    animation: cardReveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    border-radius: var(--border-radius-card); padding: 20px;
 }
-
+#result-view .kelompok-card {
+    animation: cardReveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    opacity: 0;
+}
 .kelompok-card h3 {
-    margin: 0 0 15px 0; color: var(--text-primary);
+    margin: 0 0 15px 0;
+    color: var(--text-primary); /* Default color, akan ditimpa JS */
     border-bottom: 1px solid var(--border-color); padding-bottom: 10px;
     font-size: 1.2em;
 }
+/* Aturan CSS dinamis untuk warna judul kelompok */
+.kelompok-card.color-1 h3 { color: var(--color-palette-1); border-color: var(--color-palette-1); }
+.kelompok-card.color-2 h3 { color: var(--color-palette-2); border-color: var(--color-palette-2); }
+.kelompok-card.color-3 h3 { color: var(--color-palette-3); border-color: var(--color-palette-3); }
+.kelompok-card.color-4 h3 { color: var(--color-palette-4); border-color: var(--color-palette-4); }
+.kelompok-card.color-5 h3 { color: var(--color-palette-5); border-color: var(--color-palette-5); }
+.kelompok-card.color-6 h3 { color: var(--color-palette-6); border-color: var(--color-palette-6); }
+.kelompok-card.color-7 h3 { color: var(--color-palette-7); border-color: var(--color-palette-7); }
+.kelompok-card.color-8 h3 { color: var(--color-palette-8); border-color: var(--color-palette-8); }
+.kelompok-card.color-9 h3 { color: var(--color-palette-9); border-color: var(--color-palette-9); }
+.kelompok-card.color-10 h3 { color: var(--color-palette-10); border-color: var(--color-palette-10); }
+.kelompok-card.color-11 h3 { color: var(--color-palette-11); border-color: var(--color-palette-11); }
+.kelompok-card.color-12 h3 { color: var(--color-palette-12); border-color: var(--color-palette-12); }
+.kelompok-card.color-13 h3 { color: var(--color-palette-13); border-color: var(--color-palette-13); }
+.kelompok-card.color-14 h3 { color: var(--color-palette-14); border-color: var(--color-palette-14); }
+.kelompok-card.color-15 h3 { color: var(--color-palette-15); border-color: var(--color-palette-15); }
 
+
+.kelompok-card h3 span { font-weight: 400; color: var(--text-secondary); font-size: 0.8em; }
 .kelompok-card ul { list-style: none; padding: 0; margin: 0; }
-.kelompok-card li {
-    padding: 8px 0;
-    color: var(--text-secondary);
-    opacity: 0;
-    animation: fadeInUpSlight 0.5s ease-out forwards;
+.kelompok-card li { padding: 8px 0; color: var(--text-secondary); }
+
+/* TOMBOL EKSPOR & RESET */
+.export-container { display: none; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 30px; animation: fadeInUpSlight 0.5s ease-out; }
+.export-btn, .reset-btn {
+    padding: 12px 24px; border: none; border-radius: var(--border-radius-pill);
+    font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
+    cursor: pointer; transition: all 0.3s ease;
+}
+.export-btn:hover, .reset-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
+.wa-btn { background-color: #25D366; color: white; }
+.pdf-btn { background-color: #FF5555; color: white; }
+.reset-btn {
+    background: none; border: 1px solid var(--border-color);
+    color: var(--text-secondary); width: 100%; margin-top: 15px;
 }
 
-/* =============================== */
-/* TOMBOL EKSPOR                   */
-/* =============================== */
-.export-container {
-    display: none;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 30px;
-    animation: fadeInUpSlight 0.5s ease-out;
-}
-.export-btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: var(--border-radius-pill);
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.export-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-}
-.wa-btn {
-    background-color: #25D366;
-    color: white;
-}
-.pdf-btn {
-    background-color: #FF5555;
-    color: white;
-}
-
-/* =============================== */
-/* FOOTER & RESPONSIVE             */
-/* =============================== */
-
-footer {
-    width: 100%;
-    text-align: center;
-    color: var(--text-secondary);
-    opacity: 0.5;
-    font-size: 0.9em;
-    padding: 20px 0;
-    animation: fadeIn 2s ease-out;
-}
-
+/* FOOTER & RESPONSIVE */
+footer { width: 100%; text-align: center; color: var(--text-secondary); opacity: 0.5; font-size: 0.9em; padding: 20px 0; margin-top: auto; }
+@media (max-width: 900px) { .spin-layout { flex-direction: column; align-items: center; } }
 @media (max-width: 640px) {
     body { padding: 20px 15px; }
     .container { padding: 25px; }
     h1 { font-size: 1.8em; }
-    #hasil-kelompok { grid-template-columns: 1fr; }
+    #hasil-kelompok, .spin-results-wrapper { grid-template-columns: 1fr; }
+    .wheel-container { transform: scale(0.8); margin-top: -30px; margin-bottom: -30px; }
+    footer { position: relative; }
 }
