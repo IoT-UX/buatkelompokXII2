@@ -1,48 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Kelompok Pro</title>
+    <title>Generator Kelompok Sempurna</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
+    
+    <script src="script.js" defer></script>
 </head>
 <body>
 
-    <div class="container">
-        <h1>🎲 Generator Kelompok 1.0</h1>
-        <p>36 siswa akan dibagi secara adil dengan komposisi seimbang.</p>
-
-        <div class="input-section">
-            <label>Tentukan Jumlah Kelompok:</label>
-            <div class="number-input-container">
-                <button id="btn-minus" class="number-control-btn" aria-label="Kurangi">-</button>
-                <span id="jumlah-kelompok-display" class="number-display">6</span>
-                <button id="btn-plus" class="number-control-btn" aria-label="Tambah">+</button>
-            </div>
-        </div>
-
-        <button id="generate-btn">
-            <span class="button-text">Buat Kelompok!</span>
-        </button>
-
-        <div id="hasil-kelompok">
+    <div id="setup-view" class="view active">
+        <div class="container">
+            <h1>🎲 Generator Kelompok Sempurna</h1>
+            <p>Aplikasi pembagian kelompok paling adil dan seru.</p>
+            
+            <div class="input-section">
+                <label>1. Pilih Mode Pembagian:</label>
+                <div class="mode-selector">
+                    <button id="mode-cepat-btn" class="mode-btn active" data-mode="cepat">⚡ Cepat</button>
+                    <button id="mode-spin-btn" class="mode-btn" data-mode="spin">🎡 Spin</button>
+                </div>
             </div>
 
-        <div id="export-container" class="export-container">
-            <button id="export-wa-btn" class="export-btn wa-btn">Bagikan ke WhatsApp</button>
-            <button id="export-pdf-btn" class="export-btn pdf-btn">Unduh PDF</button>
+            <div class="input-section">
+                <label>2. Tentukan Jumlah Kelompok:</label>
+                <div class="number-input-container">
+                    <button id="btn-minus" class="number-control-btn" aria-label="Kurangi">-</button>
+                    <span id="jumlah-kelompok-display" class="number-display">6</span>
+                    <button id="btn-plus" class="number-control-btn" aria-label="Tambah">+</button>
+                </div>
+            </div>
+            
+            <button id="generate-btn">
+                <span class="button-text">Buat Kelompok!</span>
+            </button>
         </div>
     </div>
 
-    <footer>
-        <p>© 2025 Kelas XII IPA 2. Dibuat dengan Penuh Semangat. ✨</p>
+    <div id="spin-view" class="view">
+        <div class="spin-layout">
+            <div class="wheel-wrapper">
+                <div class="wheel-container">
+                    <canvas id="wheel-canvas" width="500" height="500"></canvas>
+                    <div class="wheel-pointer"></div>
+                </div>
+                <button id="spin-btn">PUTAR</button>
+                <p id="spin-status" class="spin-status"></p>
+            </div>
+            <div id="spin-results" class="spin-results-wrapper"></div>
+        </div>
+    </div>
+    
+    <div id="result-view" class="view">
+         <div class="container">
+             <h1>🎉 Hasil Kelompok Telah Terbentuk!</h1>
+             <div id="hasil-kelompok"></div>
+             <div id="export-container" class="export-container">
+                <button id="export-wa-btn" class="export-btn wa-btn">Bagikan ke WhatsApp</button>
+                <button id="export-pdf-btn" class="export-btn pdf-btn">Unduh PDF</button>
+            </div>
+            <button id="reset-btn" class="reset-btn">Ulangi Pembagian</button>
+         </div>
+    </div>
+
+    <footer id="footer">
+        <p>© 2025 Kelas XII IPA 1. Dibuat dengan Penuh Semangat. ✨</p>
     </footer>
 
     <audio id="click-sound" src="click-sound.mp3"></audio>
-    <script src="script.js"></script>
-</body>
+    <audio id="wheel-sound" src="wheel-sound.mp3" loop></audio>
+    <audio id="success-sound" src="success-sound.mp3"></audio>
 
+</body>
 </html>
