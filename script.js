@@ -1,8 +1,8 @@
-// script.js - Versi Pro dengan Ekspor
+// script.js - Versi Final dengan Algoritma Pembagian Paling Adil
 document.addEventListener('DOMContentLoaded', () => {
 
     const namaLakiLaki = ["Nathan Zachari", "Maulana Fajar", "Marsel Dwi Cesar S", "Hafiz Arfandaka Yettama", "Rehan Alkari", "Idhi Amin Akbar", "M Daffa Prayoga", "M Fathan Mutaqqin", "Haura Dipocakti", "Rasya Ichsan F", "Albertus Jonathan F", "Abi Nizar Sofyan"];
-    const namaPerempuan = ["Finazla Satriani Putri", "Keisya Rajni", "Mutiara Assiva", "Nadea Adelia Alfa Putri", "Khanza Alixia", "Renaya Eka Rahayu", "Ghina Zhafiyyah", "Hana Elika Aura Sitorus", "Aurell Aini", "Regita Aulia", "Luna Belbina", "Sella Amanda", "Shofi Naila Irawati", "Rara Chika Pratiwi", "Luthfi Cayla Ayu Syifa", "Shofiya Ashyakira Daulay", "Raushan Minoo Juarsa", "Syifa Ramadhani", "Gresia Assyifa K", "Fina Zulfa Nabila", "Jolieka Nazara", "Marsilia Kiran Niar", "Remielle Linageng Suryadi", "Kayla Hanifaizha"];
+    const namaPerempuan = ["Finazla Satriani Putri", "Keisya Rajni", "Mutiara Assiva", "Nadea Adelia Alfa Putri", "Khanza Alixia", "Renaya Eka Rahayu", "Ghina Zhafiyyah", "Hana Elika Aura Sitorus", "Aurell Aini", "Regita Aulia", "Luna Belbina", "Sella Amanda", "Shofi Naila Irawati", "Rara Chika Pratiwi", "Luthfi Cayla Ayu Syifa", "Shofiya Ashyakira Daulay", "Raushan Minoo Juarsa", "Syifa Ramadhani", "Gresia Assyifa K", "Fina Zulfa Nabila", "Jolieka Nazara", "Marsilia Kiran Niar", "Remielle Lineng Suryadi", "Kayla Hanifaizha"];
 
     const generateBtn = document.getElementById('generate-btn');
     const clickSound = document.getElementById('click-sound');
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportWaBtn = document.getElementById('export-wa-btn');
     const exportPdfBtn = document.getElementById('export-pdf-btn');
 
-    let dataKelompokSaatIni = []; // Menyimpan hasil kelompok terakhir
+    let dataKelompokSaatIni = [];
 
     // --- LOGIKA KONTROL ANGKA KUSTOM ---
     const btnMinus = document.getElementById('btn-minus');
@@ -18,42 +18,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const jumlahDisplay = document.getElementById('jumlah-kelompok-display');
     let jumlahKelompok = 6;
     const minKelompok = 2;
-    const maxKelompok = 18; // Maksimal 2 orang per kelompok
+    const maxKelompok = 18;
 
     function updateJumlahDisplay() {
         jumlahDisplay.textContent = jumlahKelompok;
         btnMinus.disabled = jumlahKelompok <= minKelompok;
         btnPlus.disabled = jumlahKelompok >= maxKelompok;
     }
-    updateJumlahDisplay(); // Panggil saat awal
+    updateJumlahDisplay();
 
     btnMinus.addEventListener('click', () => {
-        if (jumlahKelompok > minKelompok) {
-            jumlahKelompok--;
-            updateJumlahDisplay();
-        }
+        if (jumlahKelompok > minKelompok) { jumlahKelompok--; updateJumlahDisplay(); }
     });
-
     btnPlus.addEventListener('click', () => {
-        if (jumlahKelompok < maxKelompok) {
-            jumlahKelompok++;
-            updateJumlahDisplay();
-        }
+        if (jumlahKelompok < maxKelompok) { jumlahKelompok++; updateJumlahDisplay(); }
     });
 
     // --- LOGIKA UTAMA GENERATE KELOMPOK ---
     generateBtn.addEventListener('click', () => {
         clickSound.currentTime = 0;
         clickSound.play();
-        exportContainer.style.display = 'none'; // Sembunyikan tombol ekspor saat generate baru
+        exportContainer.style.display = 'none';
 
-        let lakiLakiShuffled = [...namaLakiLaki].sort(() => Math.random() - 0.5);
-        let perempuanShuffled = [...namaPerempuan].sort(() => Math.random() - 0.5);
+        // ==========================================================
+        // ALGORITMA PEMBAGIAN ADIL (VERSI BARU)
+        // ==========================================================
+        
+        // 1. Gabungkan semua siswa menjadi satu array
+        const semuaSiswa = [...namaLakiLaki, ...namaPerempuan];
+        
+        // 2. Acak total seluruh siswa
+        for (let i = semuaSiswa.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [semuaSiswa[i], semuaSiswa[j]] = [semuaSiswa[j], semuaSiswa[i]];
+        }
 
-        const kelompokHasil = Array.from({ length: jumlahKelompok }, () => []);
+        // 3. Hitung ukuran dasar dan sisa pembagian
+        const totalSiswa = semuaSiswa.length;
+        const ukuranDasar = Math.floor(totalSiswa / jumlahKelompok);
+        const sisaSiswa = totalSiswa % jumlahKelompok;
 
-        lakiLakiShuffled.forEach((nama, index) => kelompokHasil[index % jumlahKelompok].push(nama));
-        perempuanShuffled.forEach((nama, index) => kelompokHasil[index % jumlahKelompok].push(nama));
+        // 4. Buat kelompok dan distribusikan siswa
+        const kelompokHasil = [];
+        let indexSiswaSaatIni = 0;
+        for (let i = 0; i < jumlahKelompok; i++) {
+            // Kelompok awal akan mendapat 1 siswa tambahan dari sisa
+            let ukuranKelompokIni = ukuranDasar + (i < sisaSiswa ? 1 : 0);
+            
+            // Ambil siswa dari array yang sudah diacak
+            const kelompok = semuaSiswa.slice(indexSiswaSaatIni, indexSiswaSaatIni + ukuranKelompokIni);
+            kelompokHasil.push(kelompok);
+            
+            // Pindahkan index untuk kelompok berikutnya
+            indexSiswaSaatIni += ukuranKelompokIni;
+        }
+        // ==========================================================
         
         dataKelompokSaatIni = kelompokHasil; // Simpan hasilnya
 
@@ -74,11 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.animationDelay = `${index * 120}ms`;
 
             const title = document.createElement('h3');
-            title.textContent = `Kelompok ${index + 1}`;
+            title.textContent = `Kelompok ${index + 1} (${kelompok.length} orang)`; // Tambahkan jumlah anggota
             card.appendChild(title);
 
             const list = document.createElement('ul');
-            kelompok.sort(() => Math.random() - 0.5).forEach(nama => {
+            // Urutkan nama di dalam kelompok secara alfabetis
+            kelompok.sort().forEach(nama => {
                 const listItem = document.createElement('li');
                 listItem.textContent = nama;
                 listItem.style.animationDelay = `${totalNama * 50 + (index * 120)}ms`;
@@ -90,18 +110,18 @@ document.addEventListener('DOMContentLoaded', () => {
             hasilContainer.appendChild(card);
         });
         
-        // Tampilkan tombol ekspor setelah animasi selesai
         setTimeout(() => {
             exportContainer.style.display = 'flex';
         }, kelompokHasil.length * 120 + 500);
     }
 
-    // --- LOGIKA EKSPOR ---
+    // --- LOGIKA EKSPOR (TIDAK BERUBAH) ---
     exportWaBtn.addEventListener('click', () => {
         let waText = `*HASIL PEMBAGIAN KELOMPOK*\n\n`;
         dataKelompokSaatIni.forEach((kelompok, index) => {
-            waText += `*Kelompok ${index + 1}*\n`;
-            kelompok.forEach(nama => {
+            waText += `*Kelompok ${index + 1} (${kelompok.length} orang)*\n`;
+            // Urutkan nama sebelum dibagikan
+            kelompok.sort().forEach(nama => {
                 waText += `- ${nama}\n`;
             });
             waText += `\n`;
@@ -124,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
         dataKelompokSaatIni.forEach((kelompok, index) => {
             tableData.push([
                 `Kelompok ${index + 1}`,
-                kelompok.join('\n')
+                // Urutkan nama sebelum dimasukkan ke PDF
+                kelompok.sort().join('\n')
             ]);
         });
 
